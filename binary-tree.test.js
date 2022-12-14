@@ -17,6 +17,14 @@ beforeEach(function() {
   //            /   \
   //           5     5
   //
+  // SCRATCH WORK:
+  //
+  //            root
+  //              |
+  //              6
+  //            /   \
+  //           7     8
+  //
 
   let smallLeft = new BinaryTreeNode(5);
   let smallRight = new BinaryTreeNode(5);
@@ -128,4 +136,3 @@ describe("areCousins", function() {
     expect(tree.areCousins(root, n3)).toBe(false);
   });
 });
-
