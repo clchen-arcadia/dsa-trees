@@ -36,6 +36,18 @@ class BinaryTreeNode {
 
     return isFinite(min) ? min : null;
   }
+
+  areCousins(node1, node2, depth = 1) {
+
+    // this === node1 || this === node2;
+
+    // const node1IsChild = this.left === node1 || this.right === node1;
+    // const node2IsChild = this.left === node2 || this.right === node2;
+
+    // if (node1IsChild && node2IsChild) return false;
+
+    let nodeStack = [this]
+  }
 }
 
 class BinaryTree {
@@ -106,7 +118,26 @@ class BinaryTree {
    * (i.e. are at the same level but have different parents. ) */
 
   areCousins(node1, node2) {
+    let depth = 1;
+    let nodeStack = [[this.root, depth, null]]
+    let node1Found = null;
+    let node2Found = null;
 
+    while(nodeStack.length) {
+      const currNode = nodeStack.pop();
+      if(currNode === node1) node1Found = currNode;
+      if(currNode === node2) node2Found = currNode;
+
+      depth= currNode[1];
+      depth++;
+      nodeStack.push([currNode.left, depth, currNode]);
+      nodeStack.push([currNode.right, depth, currNode]);
+    }
+
+    if(node1Found[1] === node2Found[1] && node1Found[2] !== node2Found[2]) {
+      return true;
+    }
+    return false;
   }
 }
 
