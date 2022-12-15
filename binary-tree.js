@@ -37,17 +37,6 @@ class BinaryTreeNode {
     return isFinite(min) ? min : null;
   }
 
-  areCousins(node1, node2, depth = 1) {
-
-    // this === node1 || this === node2;
-
-    // const node1IsChild = this.left === node1 || this.right === node1;
-    // const node2IsChild = this.left === node2 || this.right === node2;
-
-    // if (node1IsChild && node2IsChild) return false;
-
-    let nodeStack = [this]
-  }
 }
 
 class BinaryTree {
@@ -118,27 +107,68 @@ class BinaryTree {
    * (i.e. are at the same level but have different parents. ) */
 
   areCousins(node1, node2) {
-    let depth = 1;
-    let nodeStack = [[this.root, depth, null]]
-    let node1Found = null;
-    let node2Found = null;
+    // nodeStack array containing 3-tuple like arrays!
+    // like [[node, depth, nodeParent], [], [], ...]
 
-    while(nodeStack.length) {
-      const currNode = nodeStack.pop();
-      if(currNode === node1) node1Found = currNode;
-      if(currNode === node2) node2Found = currNode;
+    let nodeStack = [[this.root, 1, null]];
+    let node1Info = null;
+    let node2Info = null;
 
-      depth= currNode[1];
-      depth++;
-      nodeStack.push([currNode.left, depth, currNode]);
-      nodeStack.push([currNode.right, depth, currNode]);
+    while (nodeStack.length) {
+      const currNodeTuple = nodeStack.pop();
+
+      if (currNodeTuple[0] === node1) node1Info = currNodeTuple;
+      if (currNodeTuple[0] === node2) node2Info = currNodeTuple;
+
+      if (currNodeTuple[0].left !== null) {
+        nodeStack.push([currNodeTuple[0].left, currNodeTuple[1] + 1, currNodeTuple[0]]);
+      }
+      if (currNodeTuple[0].right !== null) {
+        nodeStack.push([currNodeTuple[0].right, currNodeTuple[1] + 1, currNodeTuple[0]]);
+      }
     }
 
-    if(node1Found[1] === node2Found[1] && node1Found[2] !== node2Found[2]) {
+    if (node1Info === null || node2Info === null) {
+      throw new Error(); //either node1 or node2 not found
+    }
+    if (node1Info[1] === node2Info[1] && node1Info[2] !== node2Info[2]) {
       return true;
     }
-    return false;
+    else return false;
   }
+
+  // From Solution:
+  // areCousins(node1, node2) {
+  //   function findLevelAndParent(
+  //     nodeToFind,
+  //     currentNode,
+  //     level = 0,
+  //     data = { level: 0, parent: null }
+  //   ) {
+  //     if (data.parent) return;
+  //     if (currentNode.left === nodeToFind || currentNode.right === nodeToFind) {
+  //       data.level = level + 1;
+  //       data.parent = currentNode;
+  //     }
+  //     if (currentNode.left) {
+  //       findLevelAndParent(nodeToFind, currentNode.left, level + 1, data);
+  //     }
+  //     if (currentNode.right) {
+  //       findLevelAndParent(nodeToFind, currentNode.right, level + 1, data);
+  //     }
+  //     return data;
+  //   }
+
+  //   let node1Info = findLevelAndParent(node1, this.root);
+  //   let node2Info = findLevelAndParent(node2, this.root);
+
+  //   let sameLevel =
+  //     node1Info && node2Info && node1Info.level === node2Info.level;
+  //   let differentParents =
+  //     node1Info && node2Info && node1Info.parent !== node2Info.parent;
+  //   return sameLevel && differentParents;
+  // }
+
 }
 
 module.exports = { BinaryTree, BinaryTreeNode };
